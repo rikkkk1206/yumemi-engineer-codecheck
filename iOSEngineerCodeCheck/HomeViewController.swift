@@ -9,7 +9,7 @@
 import UIKit
 
 class HomeViewController: UITableViewController, UISearchBarDelegate {
-
+    
     @IBOutlet weak var searchBar: UISearchBar!
     
     var repositories: [[String: Any]]=[]
@@ -43,17 +43,16 @@ class HomeViewController: UITableViewController, UISearchBarDelegate {
         if inputText.count != 0 {
             currentUrlString = "https://api.github.com/search/repositories?q=\(inputText!)"
             searchRepositories = URLSession.shared.dataTask(with: URL(string: currentUrlString)!) { (data, res, err) in
-                if let obj = try! JSONSerialization.jsonObject(with: data!) as? [String: Any] {
-                    if let items = obj["items"] as? [[String: Any]] {
+                if let obj = try! JSONSerialization.jsonObject(with: data!) as? [String: Any],
+                   let items = obj["items"] as? [[String: Any]] {
                     self.repositories = items
-                        DispatchQueue.main.async {
-                            self.tableView.reloadData()
-                        }
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
                     }
                 }
             }
-        // これ呼ばなきゃリストが更新されません
-        searchRepositories?.resume()
+            // これ呼ばなきゃリストが更新されません
+            searchRepositories?.resume()
         }
         
     }

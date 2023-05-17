@@ -22,7 +22,7 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var openIssuesLabel: UILabel!
     
     var homeViewController: HomeViewController!
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -47,13 +47,12 @@ class DetailViewController: UIViewController {
         
         titleLabel.text = repository["full_name"] as? String
         
-        if let owner = repository["owner"] as? [String: Any] {
-            if let avatarUrl = owner["avatar_url"] as? String {
-                URLSession.shared.dataTask(with: URL(string: avatarUrl)!) { (data, res, err) in
-                    let image = UIImage(data: data!)!
-                    completion(image)
-                }.resume()
-            }
+        if let owner = repository["owner"] as? [String: Any],
+           let avatarUrl = owner["avatar_url"] as? String {
+            URLSession.shared.dataTask(with: URL(string: avatarUrl)!) { (data, res, err) in
+                let image = UIImage(data: data!)!
+                completion(image)
+            }.resume()
         }
         
     }
