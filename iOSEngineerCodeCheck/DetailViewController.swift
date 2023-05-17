@@ -50,9 +50,18 @@ class DetailViewController: UIViewController {
         titleLabel.text = repository["full_name"] as? String
         if let owner = repository["owner"] as? [String: Any],
            let avatarUrl = owner["avatar_url"] as? String {
-            URLSession.shared.dataTask(with: URL(string: avatarUrl)!) { (data, res, err) in
-                let image = UIImage(data: data!)!
-                completion(image)
+            guard let url = URL(string: avatarUrl) else {
+                print("currentUrlString is invalid")
+                return
+            }
+            URLSession.shared.dataTask(with: url) { (data, res, err) in
+                if let data = data,
+                   let image = UIImage(data: data) {
+                    completion(image)
+                }
+                if let err = err {
+                    print(err)
+                }
             }.resume()
         }
     }

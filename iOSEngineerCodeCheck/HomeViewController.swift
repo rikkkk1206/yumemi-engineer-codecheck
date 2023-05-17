@@ -76,17 +76,33 @@ extension HomeViewController: UISearchBarDelegate {
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        inputText = searchBar.text!
+        guard let inputText = searchBar.text else {
+            print("searchBar.text is nil")
+            return
+        }
         if inputText.count != 0 {
-            currentUrlString = "https://api.github.com/search/repositories?q=\(inputText!)"
-            searchRepositories = URLSession.shared.dataTask(with: URL(string: currentUrlString)!) { (data, res, err) in
-                if let obj = try! JSONSerialization.jsonObject(with: data!) as? [String: Any],
-                   let items = obj["items"] as? [[String: Any]] {
-                    self.repositories = items
-                    DispatchQueue.main.async {
-                        // tableViewの更新はメインスレッドで行う必要がある
-                        self.tableView.reloadData()
+            currentUrlString = "https://api.github.com/search/repositories?q=\(inputText)"
+            guard let url = URL(string: currentUrlString) else {
+                print("currentUrlString is invalid")
+                return
+            }
+            searchRepositories = URLSession.shared.dataTask(with: url) { (data, res, err) in
+                if let data = data {
+                    do {
+                        if let obj = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                           let items = obj["items"] as? [[String: Any]] {
+                            self.repositories = items
+                            DispatchQueue.main.async {
+                                // tableViewの更新はメインスレッドで行う必要がある
+                                self.tableView.reloadData()
+                            }
+                        }
+                    } catch {
+                        print(error)
                     }
+                }
+                if let err = err {
+                    print(err)
                 }
             }
             // APIへの問い合わせを実行
