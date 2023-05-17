@@ -12,8 +12,7 @@ class HomeViewController: UITableViewController, UISearchBarDelegate {
     
     @IBOutlet weak var searchBar: UISearchBar!
     
-    var repositories: [[String: Any]]=[]
-    
+    var repositories: [[String: Any]] = []
     var searchRepositories: URLSessionTask?
     var inputText: String!
     var currentUrlString: String!
@@ -35,9 +34,7 @@ class HomeViewController: UITableViewController, UISearchBarDelegate {
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
         inputText = searchBar.text!
-        
         if inputText.count != 0 {
             currentUrlString = "https://api.github.com/search/repositories?q=\(inputText!)"
             searchRepositories = URLSession.shared.dataTask(with: URL(string: currentUrlString)!) { (data, res, err) in
@@ -53,16 +50,13 @@ class HomeViewController: UITableViewController, UISearchBarDelegate {
             // APIへの問い合わせを実行
             searchRepositories?.resume()
         }
-        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == "Detail"{
+        if segue.identifier == "Detail" {
             let vc = segue.destination as! DetailViewController
             vc.homeViewController = self
         }
-        
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -70,21 +64,17 @@ class HomeViewController: UITableViewController, UISearchBarDelegate {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = UITableViewCell()
         let repository = repositories[indexPath.row]
         cell.textLabel?.text = repository["full_name"] as? String ?? ""
         cell.detailTextLabel?.text = repository["language"] as? String ?? ""
         cell.tag = indexPath.row
         return cell
-        
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // リポジトリを選択したときに呼ばれる
         selectedIndex = indexPath.row
         performSegue(withIdentifier: "Detail", sender: self)
-        
     }
-    
 }
