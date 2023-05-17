@@ -47,8 +47,16 @@ class HomeViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
         let repository = repositories[indexPath.row]
-        cell.textLabel?.text = repository["full_name"] as? String ?? ""
-        cell.detailTextLabel?.text = repository["language"] as? String ?? ""
+        if let fullName = repository["full_name"] as? String {
+            cell.textLabel?.text = fullName
+        } else {
+            print("failed cast repository.full_name")
+        }
+        if let language = repository["language"] as? String {
+            cell.detailTextLabel?.text = language
+        } else {
+            print("failed cast repository.language")
+        }
         cell.tag = indexPath.row
         return cell
     }
