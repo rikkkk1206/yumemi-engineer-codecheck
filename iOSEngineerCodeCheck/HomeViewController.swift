@@ -35,8 +35,8 @@ class HomeViewController: UITableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Detail" {
-            let vc = segue.destination as! DetailViewController
-            vc.homeViewController = self
+            let vc = segue.destination as? DetailViewController
+            vc?.homeViewController = self
         }
     }
     
