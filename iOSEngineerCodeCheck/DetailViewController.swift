@@ -22,14 +22,13 @@ class DetailViewController: UIViewController {
     
     // MARK: Public Variables
     
-    var homeViewController: HomeViewController!
+    var repository: [String: Any] = [:]
     
     // MARK: UIViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let repository = homeViewController.repositories[homeViewController.selectedIndex]
         languageLabel.text = "Written in \(repository["language"] as? String ?? "")"
         starsLabel.text = "\(repository["stargazers_count"] as? Int ?? 0) stars"
         watchersLabel.text = "\(repository["wachers_count"] as? Int ?? 0) watchers"
@@ -46,7 +45,6 @@ class DetailViewController: UIViewController {
     // MARK: Private Functions
     
     private func getAvatarImage(_ completion: @escaping (UIImage) -> Void) {
-        let repository = homeViewController.repositories[homeViewController.selectedIndex]
         titleLabel.text = repository["full_name"] as? String
         if let owner = repository["owner"] as? [String: Any],
            let avatarUrl = owner["avatar_url"] as? String {

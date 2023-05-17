@@ -17,13 +17,9 @@ class HomeViewController: UITableViewController {
     // MARK: Fileprivate Variables
     
     fileprivate var searchRepositories: URLSessionTask?
-    fileprivate var inputText: String!
-    fileprivate var currentUrlString: String!
-    
-    // MARK: Public Variables
-    
-    var repositories: [[String: Any]] = []
-    var selectedIndex: Int!
+    fileprivate var inputText: String = ""
+    fileprivate var repositories: [[String: Any]] = []
+    fileprivate var selectedIndex: Int? = nil
     
     // MARK: UIViewController
     
@@ -34,9 +30,11 @@ class HomeViewController: UITableViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Detail" {
-            let vc = segue.destination as? DetailViewController
-            vc?.homeViewController = self
+        if segue.identifier == "Detail",
+           let vc = segue.destination as? DetailViewController,
+           let repository = getSelectedRepository() {
+            // 選択したリポジトリの情報を遷移先に渡す
+            vc.repository = repository
         }
     }
     
@@ -60,6 +58,20 @@ class HomeViewController: UITableViewController {
         selectedIndex = indexPath.row
         performSegue(withIdentifier: "Detail", sender: self)
     }
+    
+    // MARK: Private Functions
+    
+    private func getSelectedRepository() -> [String: Any]? {
+        guard let selectedIndex = selectedIndex else {
+            print("selectedIndex is nil")
+            return nil
+        }
+        guard repositories.indices.contains(selectedIndex) else {
+            print("selectedIndex is out of repositories range")
+            return nil
+        }
+        return repositories[selectedIndex]
+    }
 }
 
 // MARK: - UISearchBarDelegate
@@ -80,10 +92,10 @@ extension HomeViewController: UISearchBarDelegate {
             print("searchBar.text is nil")
             return
         }
-        if inputText.count != 0 {
-            currentUrlString = "https://api.github.com/search/repositories?q=\(inputText)"
-            guard let url = URL(string: currentUrlString) else {
-                print("currentUrlString is invalid")
+        if !inputText.isEmpty {
+            let urlString = "https://api.github.com/search/repositories?q=\(inputText)"
+            guard let url = URL(string: urlString) else {
+                print("urlString is invalid")
                 return
             }
             searchRepositories = URLSession.shared.dataTask(with: url) { (data, res, err) in
