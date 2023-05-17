@@ -35,6 +35,7 @@ class DetailViewController: UIViewController {
         openIssuesLabel.text = "\(repository["open_issues_count"] as? Int ?? 0) open issues"
         getAvatarImage() { image in
             DispatchQueue.main.async {
+                // UI更新はメインスレッドで行う必要がある
                 self.imageView.image = image
             }
         }
