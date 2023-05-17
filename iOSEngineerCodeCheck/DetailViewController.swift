@@ -44,7 +44,7 @@ class DetailViewController: UIViewController {
         } else {
             print("failed cast repository.stargazers_count")
         }
-        if let wachersCount = repository["wachers_count"] as? Int {
+        if let wachersCount = repository["watchers_count"] as? Int {
             watchersLabel.text = "\(wachersCount) watchers"
         } else {
             print("failed cast repository.wachers_count")

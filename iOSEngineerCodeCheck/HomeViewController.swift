@@ -45,7 +45,7 @@ class HomeViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Repository", for: indexPath)
         let repository = repositories[indexPath.row]
         if let fullName = repository["full_name"] as? String {
             cell.textLabel?.text = fullName
