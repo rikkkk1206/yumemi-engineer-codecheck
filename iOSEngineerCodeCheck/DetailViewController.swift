@@ -1,5 +1,5 @@
 //
-//  ViewController2.swift
+//  DetailViewController.swift
 //  iOSEngineerCodeCheck
 //
 //  Created by 史 翔新 on 2020/04/21.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController2: UIViewController {
+class DetailViewController: UIViewController {
     
     @IBOutlet weak var ImgView: UIImageView!
     
@@ -21,7 +21,7 @@ class ViewController2: UIViewController {
     @IBOutlet weak var FrksLbl: UILabel!
     @IBOutlet weak var IsssLbl: UILabel!
     
-    var vc1: ViewController!
+    var vc1: HomeViewController!
         
     override func viewDidLoad() {
         super.viewDidLoad()
