@@ -22,19 +22,43 @@ class DetailViewController: UIViewController {
     
     // MARK: Public Variables
     
-    var homeViewController: HomeViewController!
+    var repository: [String: Any] = [:]
     
     // MARK: UIViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let repository = homeViewController.repositories[homeViewController.selectedIndex]
-        languageLabel.text = "Written in \(repository["language"] as? String ?? "")"
-        starsLabel.text = "\(repository["stargazers_count"] as? Int ?? 0) stars"
-        watchersLabel.text = "\(repository["wachers_count"] as? Int ?? 0) watchers"
-        forksLabel.text = "\(repository["forks_count"] as? Int ?? 0) forks"
-        openIssuesLabel.text = "\(repository["open_issues_count"] as? Int ?? 0) open issues"
+        setRepositoryData()
+    }
+    
+    // MARK: Private Functions
+    
+    private func setRepositoryData() {
+        if let language = repository["language"] as? String {
+            languageLabel.text = "Written in \(language)"
+        } else {
+            print("failed cast repository.language")
+        }
+        if let stargazersCount = repository["stargazers_count"] as? Int {
+            starsLabel.text = "\(stargazersCount) stars"
+        } else {
+            print("failed cast repository.stargazers_count")
+        }
+        if let wachersCount = repository["wachers_count"] as? Int {
+            watchersLabel.text = "\(wachersCount) watchers"
+        } else {
+            print("failed cast repository.wachers_count")
+        }
+        if let forksCount = repository["forks_count"] as? Int {
+            forksLabel.text = "\(forksCount) forks"
+        } else {
+            print("failed cast repository.forks_count")
+        }
+        if let openIssuesCount = repository["open_issues_count"] as? Int {
+            openIssuesLabel.text = "\(openIssuesCount) open issues"
+        } else {
+            print("failed cast repository.open_issues_count")
+        }
         getAvatarImage() { image in
             DispatchQueue.main.async {
                 // UI更新はメインスレッドで行う必要がある
@@ -43,16 +67,22 @@ class DetailViewController: UIViewController {
         }
     }
     
-    // MARK: Private Functions
-    
     private func getAvatarImage(_ completion: @escaping (UIImage) -> Void) {
-        let repository = homeViewController.repositories[homeViewController.selectedIndex]
         titleLabel.text = repository["full_name"] as? String
         if let owner = repository["owner"] as? [String: Any],
            let avatarUrl = owner["avatar_url"] as? String {
-            URLSession.shared.dataTask(with: URL(string: avatarUrl)!) { (data, res, err) in
-                let image = UIImage(data: data!)!
-                completion(image)
+            guard let url = URL(string: avatarUrl) else {
+                print("currentUrlString is invalid")
+                return
+            }
+            URLSession.shared.dataTask(with: url) { (data, res, err) in
+                if let data = data,
+                   let image = UIImage(data: data) {
+                    completion(image)
+                }
+                if let err = err {
+                    print(err)
+                }
             }.resume()
         }
     }
