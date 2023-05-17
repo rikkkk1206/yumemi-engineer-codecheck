@@ -10,20 +10,20 @@ import UIKit
 
 class HomeViewController: UITableViewController, UISearchBarDelegate {
 
-    @IBOutlet weak var SchBr: UISearchBar!
+    @IBOutlet weak var searchBar: UISearchBar!
     
-    var repo: [[String: Any]]=[]
+    var repositories: [[String: Any]]=[]
     
-    var task: URLSessionTask?
-    var word: String!
-    var url: String!
-    var idx: Int!
+    var searchRepositories: URLSessionTask?
+    var inputText: String!
+    var currentUrlString: String!
+    var selectedIndex: Int!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        SchBr.text = "GitHubのリポジトリを検索できるよー"
-        SchBr.delegate = self
+        searchBar.text = "GitHubのリポジトリを検索できるよー"
+        searchBar.delegate = self
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -33,19 +33,19 @@ class HomeViewController: UITableViewController, UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        task?.cancel()
+        searchRepositories?.cancel()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
-        word = searchBar.text!
+        inputText = searchBar.text!
         
-        if word.count != 0 {
-            url = "https://api.github.com/search/repositories?q=\(word!)"
-            task = URLSession.shared.dataTask(with: URL(string: url)!) { (data, res, err) in
+        if inputText.count != 0 {
+            currentUrlString = "https://api.github.com/search/repositories?q=\(inputText!)"
+            searchRepositories = URLSession.shared.dataTask(with: URL(string: currentUrlString)!) { (data, res, err) in
                 if let obj = try! JSONSerialization.jsonObject(with: data!) as? [String: Any] {
                     if let items = obj["items"] as? [[String: Any]] {
-                    self.repo = items
+                    self.repositories = items
                         DispatchQueue.main.async {
                             self.tableView.reloadData()
                         }
@@ -53,7 +53,7 @@ class HomeViewController: UITableViewController, UISearchBarDelegate {
                 }
             }
         // これ呼ばなきゃリストが更新されません
-        task?.resume()
+        searchRepositories?.resume()
         }
         
     }
@@ -61,22 +61,22 @@ class HomeViewController: UITableViewController, UISearchBarDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "Detail"{
-            let dtl = segue.destination as! DetailViewController
-            dtl.vc1 = self
+            let vc = segue.destination as! DetailViewController
+            vc.homeViewController = self
         }
         
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return repo.count
+        return repositories.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = UITableViewCell()
-        let rp = repo[indexPath.row]
-        cell.textLabel?.text = rp["full_name"] as? String ?? ""
-        cell.detailTextLabel?.text = rp["language"] as? String ?? ""
+        let repository = repositories[indexPath.row]
+        cell.textLabel?.text = repository["full_name"] as? String ?? ""
+        cell.detailTextLabel?.text = repository["language"] as? String ?? ""
         cell.tag = indexPath.row
         return cell
         
@@ -84,7 +84,7 @@ class HomeViewController: UITableViewController, UISearchBarDelegate {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // 画面遷移時に呼ばれる
-        idx = indexPath.row
+        selectedIndex = indexPath.row
         performSegue(withIdentifier: "Detail", sender: self)
         
     }
