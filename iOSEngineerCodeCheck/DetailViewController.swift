@@ -10,6 +10,8 @@ import UIKit
 
 class DetailViewController: UIViewController {
     
+    // MARK: @IBOutlet
+    
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var languageLabel: UILabel!
@@ -18,7 +20,11 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var forksLabel: UILabel!
     @IBOutlet weak var openIssuesLabel: UILabel!
     
+    // MARK: Public Variables
+    
     var homeViewController: HomeViewController!
+    
+    // MARK: UIViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +43,9 @@ class DetailViewController: UIViewController {
         }
     }
     
-    func getAvatarImage(_ completion: @escaping (UIImage) -> Void) {
+    // MARK: Private Functions
+    
+    private func getAvatarImage(_ completion: @escaping (UIImage) -> Void) {
         let repository = homeViewController.repositories[homeViewController.selectedIndex]
         titleLabel.text = repository["full_name"] as? String
         if let owner = repository["owner"] as? [String: Any],

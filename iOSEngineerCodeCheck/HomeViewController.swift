@@ -8,21 +8,63 @@
 
 import UIKit
 
-class HomeViewController: UITableViewController, UISearchBarDelegate {
+class HomeViewController: UITableViewController {
+    
+    // MARK: @IBOutlet
     
     @IBOutlet weak var searchBar: UISearchBar!
     
+    // MARK: Fileprivate Variables
+    
+    fileprivate var searchRepositories: URLSessionTask?
+    fileprivate var inputText: String!
+    fileprivate var currentUrlString: String!
+    
+    // MARK: Public Variables
+    
     var repositories: [[String: Any]] = []
-    var searchRepositories: URLSessionTask?
-    var inputText: String!
-    var currentUrlString: String!
     var selectedIndex: Int!
+    
+    // MARK: UIViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.text = "GitHubのリポジトリを検索できるよー"
         searchBar.delegate = self
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "Detail" {
+            let vc = segue.destination as! DetailViewController
+            vc.homeViewController = self
+        }
+    }
+    
+    // MARK: UITableViewController
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return repositories.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell()
+        let repository = repositories[indexPath.row]
+        cell.textLabel?.text = repository["full_name"] as? String ?? ""
+        cell.detailTextLabel?.text = repository["language"] as? String ?? ""
+        cell.tag = indexPath.row
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // リポジトリを選択したときに呼ばれる
+        selectedIndex = indexPath.row
+        performSegue(withIdentifier: "Detail", sender: self)
+    }
+}
+
+// MARK: - UISearchBarDelegate
+
+extension HomeViewController: UISearchBarDelegate {
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         searchBar.text = "" // 初期のテキストを削除
@@ -50,31 +92,5 @@ class HomeViewController: UITableViewController, UISearchBarDelegate {
             // APIへの問い合わせを実行
             searchRepositories?.resume()
         }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Detail" {
-            let vc = segue.destination as! DetailViewController
-            vc.homeViewController = self
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return repositories.count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        let repository = repositories[indexPath.row]
-        cell.textLabel?.text = repository["full_name"] as? String ?? ""
-        cell.detailTextLabel?.text = repository["language"] as? String ?? ""
-        cell.tag = indexPath.row
-        return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // リポジトリを選択したときに呼ばれる
-        selectedIndex = indexPath.row
-        performSegue(withIdentifier: "Detail", sender: self)
     }
 }
