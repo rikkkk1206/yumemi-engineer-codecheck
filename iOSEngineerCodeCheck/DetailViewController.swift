@@ -33,11 +33,15 @@ class DetailViewController: UIViewController {
         watchersLabel.text = "\(repository["wachers_count"] as? Int ?? 0) watchers"
         forksLabel.text = "\(repository["forks_count"] as? Int ?? 0) forks"
         openIssuesLabel.text = "\(repository["open_issues_count"] as? Int ?? 0) open issues"
-        getImage()
+        getAvatarImage() { image in
+            DispatchQueue.main.async {
+                self.imageView.image = image
+            }
+        }
         
     }
     
-    func getImage(){
+    func getAvatarImage(_ completion: @escaping (UIImage) -> Void){
         
         let repository = homeViewController.repositories[homeViewController.selectedIndex]
         
@@ -47,9 +51,7 @@ class DetailViewController: UIViewController {
             if let avatarUrl = owner["avatar_url"] as? String {
                 URLSession.shared.dataTask(with: URL(string: avatarUrl)!) { (data, res, err) in
                     let image = UIImage(data: data!)!
-                    DispatchQueue.main.async {
-                        self.imageView.image = image
-                    }
+                    completion(image)
                 }.resume()
             }
         }
