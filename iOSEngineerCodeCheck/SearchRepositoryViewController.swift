@@ -1,5 +1,5 @@
 //
-//  HomeViewController.swift
+//  SearchRepositoryViewController.swift
 //  iOSEngineerCodeCheck
 //
 //  Created by 史 翔新 on 2020/04/20.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HomeViewController: UITableViewController {
+class SearchRepositoryViewController: UITableViewController {
     
     // MARK: @IBOutlet
     
@@ -31,7 +31,7 @@ class HomeViewController: UITableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Detail",
-           let vc = segue.destination as? DetailViewController,
+           let vc = segue.destination as? RepositoryDetailViewController,
            let repository = getSelectedRepository() {
             // 選択したリポジトリの情報を遷移先に渡す
             vc.repository = repository
@@ -84,7 +84,7 @@ class HomeViewController: UITableViewController {
 
 // MARK: - UISearchBarDelegate
 
-extension HomeViewController: UISearchBarDelegate {
+extension SearchRepositoryViewController: UISearchBarDelegate {
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         searchBar.text = "" // 初期のテキストを削除

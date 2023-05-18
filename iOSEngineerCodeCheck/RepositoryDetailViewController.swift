@@ -1,5 +1,5 @@
 //
-//  DetailViewController.swift
+//  RepositoryDetailViewController.swift
 //  iOSEngineerCodeCheck
 //
 //  Created by 史 翔新 on 2020/04/21.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DetailViewController: UIViewController {
+class RepositoryDetailViewController: UIViewController {
     
     // MARK: @IBOutlet
     
