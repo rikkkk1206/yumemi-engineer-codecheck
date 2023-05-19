@@ -10,6 +10,12 @@ import UIKit
 
 final class SearchRepositoryViewController: UITableViewController {
     
+    // MARK: Public Functions
+    
+    func inject(presenter: SearchRepositoryPresenterInput) {
+        self.presenter = presenter
+    }
+    
     // MARK: @IBOutlet
     
     @IBOutlet private weak var searchBar: UISearchBar!
@@ -17,10 +23,6 @@ final class SearchRepositoryViewController: UITableViewController {
     // MARK: Private Variables
     
     private var presenter: SearchRepositoryPresenterInput!
-    
-    func inject(presenter: SearchRepositoryPresenterInput) {
-        self.presenter = presenter
-    }
     
     // MARK: UIViewController
     
@@ -34,14 +36,22 @@ final class SearchRepositoryViewController: UITableViewController {
         inject(presenter: presenter)
     }
     
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "Detail",
-//           let vc = segue.destination as? RepositoryDetailViewController,
-//           let repository = getSelectedRepository() {
-//            // 選択したリポジトリの情報を遷移先に渡す
-//            vc.repository = repository
-//        }
-//    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "Detail",
+           let repository = sender as? Repository {
+            // 選択したリポジトリの詳細画面へ値渡し
+            guard let view = segue.destination as? RepositoryDetailViewController else {
+                print("failed make RepositoryDetailViewController")
+                return
+            }
+            let model = RepositoryDetailModel()
+            let presenter = RepositoryDetailPresenter(
+                repository: repository,
+                view: view,
+                model: model)
+            view.inject(presenter: presenter)
+        }
+    }
     
     // MARK: UITableViewController
     
@@ -90,6 +100,6 @@ extension SearchRepositoryViewController: SearchRepositoryPresenterOutput {
     }
     
     func transitionRepositoryDetail(_ repository: Repository) {
-        performSegue(withIdentifier: "Detail", sender: self)
+        performSegue(withIdentifier: "Detail", sender: repository)
     }
 }
