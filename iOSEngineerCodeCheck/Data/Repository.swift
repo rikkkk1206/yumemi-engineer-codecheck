@@ -25,7 +25,7 @@ struct SearchRepositoryResponse: Decodable {
 struct Repository: Decodable {
     
     let fullName: String
-    let language: String
+    let language: String?   // languageはnullの場合があったためOptional
     let stargazersCount: Int
     let watchersCount: Int
     let forksCount: Int
