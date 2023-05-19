@@ -22,9 +22,13 @@ final class SearchRepositoryModel: SearchRepositoryModelInput {
     func fetchRepository(
         inputText: String,
         completion: @escaping ([Repository]) -> ()) {
-            let urlString = "https://api.github.com/search/repositories?q=\(inputText)"
+            guard let encodedInputText = inputText.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
+                print("failed encode \(inputText) for URL")
+                return
+            }
+            let urlString = "https://api.github.com/search/repositories?q=\(encodedInputText)"
             guard let url = URL(string: urlString) else {
-                print("urlString is invalid")
+                print("urlString(\(urlString)) is invalid")
                 return
             }
             searchingSessionTask = URLSession.shared.dataTask(with: url) { (data, res, err) in
