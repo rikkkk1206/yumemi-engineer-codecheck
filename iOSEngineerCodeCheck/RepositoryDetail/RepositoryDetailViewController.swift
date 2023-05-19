@@ -42,7 +42,12 @@ class RepositoryDetailViewController: UIViewController {
 extension RepositoryDetailViewController: RepositoryDetailPresenterOutput {
     
     func setLabelText() {
-        languageLabel.text = "Written in \(presenter.repository.language)"
+        if let language = presenter.repository.language {
+            languageLabel.text = "Written in \(language)"
+        } else {
+            languageLabel.text = ""
+            print("repository.language is nil")
+        }
         starsLabel.text = "\(presenter.repository.stargazersCount) stars"
         watchersLabel.text = "\(presenter.repository.watchersCount) watchers"
         forksLabel.text = "\(presenter.repository.forksCount) forks"
