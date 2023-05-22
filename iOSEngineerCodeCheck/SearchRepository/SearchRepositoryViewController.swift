@@ -37,7 +37,7 @@ final class SearchRepositoryViewController: UITableViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Detail",
+        if segue.identifier == RepositoryDetailViewController.segueIdentifier,
            let repository = sender as? Repository {
             // 選択したリポジトリの詳細画面へ値渡し
             guard let view = segue.destination as? RepositoryDetailViewController else {
@@ -100,6 +100,6 @@ extension SearchRepositoryViewController: SearchRepositoryPresenterOutput {
     }
     
     func transitionRepositoryDetail(_ repository: Repository) {
-        performSegue(withIdentifier: "Detail", sender: repository)
+        performSegue(withIdentifier: RepositoryDetailViewController.segueIdentifier, sender: repository)
     }
 }

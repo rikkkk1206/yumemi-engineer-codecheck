@@ -10,6 +10,10 @@ import UIKit
 
 class RepositoryDetailViewController: UIViewController {
     
+    // MARK: Static
+    
+    static let segueIdentifier = "Detail"
+    
     // MARK: Public Functions
     
     func inject(presenter: RepositoryDetailPresenterInput) {

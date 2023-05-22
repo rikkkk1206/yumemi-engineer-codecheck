@@ -19,34 +19,27 @@ final class SearchRepositoryModel: SearchRepositoryModelInput {
     
     var searchingSessionTask: URLSessionTask? = nil
     
-    func fetchRepository(
-        inputText: String,
-        completion: @escaping ([Repository]) -> ()) {
-            guard let encodedInputText = inputText.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
-                print("failed encode \(inputText) for URL")
-                return
-            }
-            let urlString = "https://api.github.com/search/repositories?q=\(encodedInputText)"
-            guard let url = URL(string: urlString) else {
-                print("urlString(\(urlString)) is invalid")
-                return
-            }
-            searchingSessionTask = URLSession.shared.dataTask(with: url) { (data, res, err) in
-                if let data = data {
-                    do {
-                        let response = try JSONDecoder().decode(SearchRepositoryResponse.self, from: data)
-                        completion(response.items)
-                    } catch {
-                        print(error)
-                    }
-                }
-                if let err = err {
-                    print(err)
-                }
-            }
-            // APIへの問い合わせを実行
-            searchingSessionTask?.resume()
+    func fetchRepository(inputText: String, completion: @escaping ([Repository]) -> ()) {
+        guard let encodedInputText = inputText.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
+            print("failed encode \(inputText) for URL")
+            return
         }
+        let urlString = "https://api.github.com/search/repositories?q=\(encodedInputText)"
+        guard let url = URL(string: urlString) else {
+            print("urlString(\(urlString)) is invalid")
+            return
+        }
+        searchingSessionTask = URLSessionUtility.makeUrlSessionDataTask(with: url, decodeType: SearchRepositoryResponse.self) { result in
+            switch result {
+            case .success(let response):
+                completion(response.items)
+            case .failure(let failure):
+                print("failed makeUrlSessionDataTask(\(urlString): ", failure)
+            }
+        }
+        // APIへの問い合わせを実行
+        searchingSessionTask?.resume()
+    }
     
     func searchingSessionCancel() {
         searchingSessionTask?.cancel()

@@ -20,13 +20,16 @@ final class RepositoryDetailModel: RepositoryDetailModelInput {
             print("urlString(\(urlString)) is invalid")
             return
         }
-        URLSession.shared.dataTask(with: url) { (data, res, err) in
+        
+        URLSessionUtility.makeUrlSessionDataTask(with: url) { (data, error) in
+            if let error = error {
+                print("failed makeUrlSessionDataTask(\(urlString): ", error)
+                return
+            }
+            
             if let data = data,
                let image = UIImage(data: data) {
                 completion(image)
-            }
-            if let err = err {
-                print(err)
             }
         }.resume()
     }
