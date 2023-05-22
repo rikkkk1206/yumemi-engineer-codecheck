@@ -29,17 +29,12 @@ final class SearchRepositoryModel: SearchRepositoryModelInput {
             print("urlString(\(urlString)) is invalid")
             return
         }
-        searchingSessionTask = URLSession.shared.dataTask(with: url) { (data, res, err) in
-            if let data = data {
-                do {
-                    let response = try JSONDecoder().decode(SearchRepositoryResponse.self, from: data)
-                    completion(response.items)
-                } catch {
-                    print(error)
-                }
-            }
-            if let err = err {
-                print(err)
+        searchingSessionTask = URLSessionUtility.makeUrlSessionDataTask(with: url, decodeType: SearchRepositoryResponse.self) { result in
+            switch result {
+            case .success(let response):
+                completion(response.items)
+            case .failure(let failure):
+                print("failed makeUrlSessionDataTask(\(urlString): ", failure)
             }
         }
         // APIへの問い合わせを実行
