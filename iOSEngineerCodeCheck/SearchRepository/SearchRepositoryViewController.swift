@@ -28,8 +28,6 @@ final class SearchRepositoryViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchBar.text = "GitHubのリポジトリを検索できるよー"
-        searchBar.delegate = self
         
         let model = SearchRepositoryModel()
         let presenter = SearchRepositoryPresenter(view: self, model: model)
@@ -78,7 +76,6 @@ final class SearchRepositoryViewController: UITableViewController {
 extension SearchRepositoryViewController: UISearchBarDelegate {
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        searchBar.text = "" // 初期のテキストを削除
         return true
     }
     
