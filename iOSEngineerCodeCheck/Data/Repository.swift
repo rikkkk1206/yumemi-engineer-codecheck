@@ -32,6 +32,7 @@ struct Repository: Decodable {
     let openIssuesCount: Int
     let owner: Owner
     let description: String?    // descriptionはnullの場合があったためOptional
+    let updatedAt: String
     
     enum CodingKeys: String, CodingKey {
         case name
@@ -43,6 +44,7 @@ struct Repository: Decodable {
         case openIssuesCount = "open_issues_count"
         case owner
         case description
+        case updatedAt = "updated_at"
     }
     
     struct Owner: Decodable {
