@@ -6,25 +6,25 @@
 //  Copyright © 2023 YUMEMI Inc. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 protocol SearchRepositoryPresenterInput {
     var numberOfRepositories: Int { get }
-    func repository(forRow row: Int) -> Repository?
+    var enableEditingSearchBar: Bool { get }
+    func repositoryInfomation(forRow row: Int) -> RepositoryInfomation?
     func didSelectRow(at indexPath: IndexPath)
     func didClickSearchButton(text: String?)
-    func didChangeInputText()
 }
 
 // PresenterがViewに描画指示をするためのインターフェイス
 protocol SearchRepositoryPresenterOutput: AnyObject {
-    func updateRepositories(_ repositories: [Repository])
-    func transitionRepositoryDetail(_ repository: Repository)
+    func updateRepositories()
+    func transitionRepositoryDetail(_ repositoryInfo: RepositoryInfomation)
 }
 
 final class SearchRepositoryPresenter: SearchRepositoryPresenterInput {
     
-    private(set) var repositories: [Repository] = []
+    private(set) var repositoryInfos: [RepositoryInfomation] = []
     
     private weak var view: SearchRepositoryPresenterOutput!
     private var model: SearchRepositoryModelInput
@@ -36,17 +36,21 @@ final class SearchRepositoryPresenter: SearchRepositoryPresenterInput {
     
     // MARK: SearchRepositoryPresenterInput
     
-    var numberOfRepositories: Int {
-        return repositories.count
+    var enableEditingSearchBar: Bool {
+        return !model.runningUrlSessionTask
     }
     
-    func repository(forRow row: Int) -> Repository? {
+    var numberOfRepositories: Int {
+        return repositoryInfos.count
+    }
+    
+    func repositoryInfomation(forRow row: Int) -> RepositoryInfomation? {
         guard row < numberOfRepositories else { return nil }
-        return repositories[row]
+        return repositoryInfos[row]
     }
     
     func didSelectRow(at indexPath: IndexPath) {
-        guard let repository = repository(forRow: indexPath.row) else { return }
+        guard let repository = repositoryInfomation(forRow: indexPath.row) else { return }
         view.transitionRepositoryDetail(repository)
     }
     
@@ -54,16 +58,15 @@ final class SearchRepositoryPresenter: SearchRepositoryPresenterInput {
         guard let inputText = text,
               !inputText.isEmpty else { return }
         
-        model.fetchRepository(inputText: inputText) { [weak self] repositories in
-            self?.repositories = repositories
+        Task { [weak self] in
+            guard let repositoryInfos = await self?.model.fetchRepositoryInfomation(inputText: inputText) else {
+                return
+            }
+            self?.repositoryInfos = repositoryInfos
             
-            DispatchQueue.main.async {
-                self?.view.updateRepositories(repositories)
+            DispatchQueue.main.async { [weak self] in
+                self?.view.updateRepositories()
             }
         }
-    }
-    
-    func didChangeInputText() {
-        model.searchingSessionCancel()
     }
 }

@@ -6,7 +6,7 @@
 //  Copyright © 2023 YUMEMI Inc. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 struct SearchRepositoryResponse: Decodable {
     
@@ -23,7 +23,7 @@ struct SearchRepositoryResponse: Decodable {
 }
 
 struct Repository: Decodable {
-    
+    let name: String
     let fullName: String
     let language: String?   // languageはnullの場合があったためOptional
     let stargazersCount: Int
@@ -31,9 +31,10 @@ struct Repository: Decodable {
     let forksCount: Int
     let openIssuesCount: Int
     let owner: Owner
+    let description: String?    // descriptionはnullの場合があったためOptional
     
     enum CodingKeys: String, CodingKey {
-        
+        case name
         case fullName = "full_name"
         case language
         case stargazersCount = "stargazers_count"
@@ -41,15 +42,26 @@ struct Repository: Decodable {
         case forksCount = "forks_count"
         case openIssuesCount = "open_issues_count"
         case owner
+        case description
     }
     
     struct Owner: Decodable {
-        
+        let login: String
         let avatarUrl: String
         
         enum CodingKeys: String, CodingKey {
-            
+            case login
             case avatarUrl = "avatar_url"
         }
+    }
+}
+
+struct RepositoryInfomation {
+    let repository: Repository
+    var image: UIImage?
+    
+    init(repository: Repository, image: UIImage?) {
+        self.repository = repository
+        self.image = image
     }
 }
