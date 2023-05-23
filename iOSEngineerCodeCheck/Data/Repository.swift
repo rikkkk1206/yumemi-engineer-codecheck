@@ -58,6 +58,7 @@ struct Repository: Decodable {
     }
 }
 
+// Repositoryでは画像のURLしか保持していないため、画像自体も一緒に管理するための構造を用意
 struct RepositoryInfomation {
     let repository: Repository
     var image: UIImage?

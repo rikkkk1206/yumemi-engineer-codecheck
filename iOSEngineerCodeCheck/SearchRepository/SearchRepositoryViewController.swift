@@ -29,7 +29,9 @@ final class SearchRepositoryViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // カスタムセルをtableViewに登録
         tableView.register(UINib(nibName: SearchRepositoryTableViewCell.identifier, bundle: nil), forCellReuseIdentifier: SearchRepositoryTableViewCell.identifier)
+        
         let model = SearchRepositoryModel()
         let presenter = SearchRepositoryPresenter(view: self, model: model)
         inject(presenter: presenter)
@@ -77,10 +79,12 @@ final class SearchRepositoryViewController: UITableViewController {
 extension SearchRepositoryViewController: UISearchBarDelegate {
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        // 検索バーの文字を編集可能かどうか
         return presenter.enableEditingSearchBar
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        // 検索開始
         presenter.didClickSearchButton(text: searchBar.text)
     }
 }

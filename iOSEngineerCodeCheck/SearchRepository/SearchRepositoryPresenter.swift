@@ -58,6 +58,7 @@ final class SearchRepositoryPresenter: SearchRepositoryPresenterInput {
         guard let inputText = text,
               !inputText.isEmpty else { return }
         
+        // リポジトリ情報と画像情報が全て揃ってから検索結果に反映したいため、同期的に取得処理を行う
         Task { [weak self] in
             guard let repositoryInfos = await self?.model.fetchRepositoryInfomation(inputText: inputText) else {
                 return

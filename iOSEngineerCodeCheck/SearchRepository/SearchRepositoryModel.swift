@@ -18,12 +18,15 @@ final class SearchRepositoryModel: SearchRepositoryModelInput {
     var runningUrlSessionTask: Bool = false
     
     func fetchRepositoryInfomation(inputText: String) async -> [RepositoryInfomation]? {
+        // リポジトリ情報を取得
         guard let repositories = await fetchRepository(inputText: inputText) else {
             return nil
         }
         var repositoryInfos: [RepositoryInfomation] = []
+        // 検索結果の全リポジトリについて、avatarUrlから画像情報を取得
         for repository in repositories {
             var info = RepositoryInfomation(repository: repository, image: nil)
+            // 情報が全部揃ってから返却する
             let image = await fetchAvatarImage(with: repository.owner.avatarUrl)
             info.image = image
             repositoryInfos.append(info)
@@ -32,6 +35,7 @@ final class SearchRepositoryModel: SearchRepositoryModelInput {
     }
     
     private func fetchRepository(inputText: String) async -> [Repository]? {
+        // 日本語等をurlに埋め込めるようにパーセントエンコード
         guard let encodedInputText = inputText.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
             print("failed encode \(inputText) for URL")
             return nil
