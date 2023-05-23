@@ -20,6 +20,7 @@ protocol SearchRepositoryPresenterInput {
 protocol SearchRepositoryPresenterOutput: AnyObject {
     func updateRepositories()
     func transitionRepositoryDetail(_ repositoryInfo: RepositoryInfomation)
+    func toggleIndicator(_ isHidden: Bool)
 }
 
 final class SearchRepositoryPresenter: SearchRepositoryPresenterInput {
@@ -32,12 +33,18 @@ final class SearchRepositoryPresenter: SearchRepositoryPresenterInput {
     init(view: SearchRepositoryPresenterOutput, model: SearchRepositoryModelInput) {
         self.view = view
         self.model = model
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didSetRunningFetchRepositoryTask),
+            name: SearchRepositoryModel.didSetRunningFetchRepositoryTask,
+            object: nil)
     }
     
     // MARK: SearchRepositoryPresenterInput
     
     var enableEditingSearchBar: Bool {
-        return !model.runningUrlSessionTask
+        return !model.runningFetchRepositoryTask
     }
     
     var numberOfRepositories: Int {
@@ -68,6 +75,18 @@ final class SearchRepositoryPresenter: SearchRepositoryPresenterInput {
             DispatchQueue.main.async { [weak self] in
                 self?.view.updateRepositories()
             }
+        }
+    }
+    
+    // MARK: Observer
+    
+    @objc private func didSetRunningFetchRepositoryTask(notification: Notification) {
+        guard let isRunning = notification.object as? Bool else {
+            print("failed downcast notification.object")
+            return
+        }
+        DispatchQueue.main.async { [weak self] in
+            self?.view.toggleIndicator(!isRunning)
         }
     }
 }

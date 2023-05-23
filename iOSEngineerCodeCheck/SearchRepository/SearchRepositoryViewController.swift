@@ -24,11 +24,14 @@ final class SearchRepositoryViewController: UITableViewController {
     
     private var presenter: SearchRepositoryPresenterInput!
     
+    private var indicator = UIActivityIndicatorView(style: .large)
+    
     // MARK: UIViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupIndicator()
         // カスタムセルをtableViewに登録
         tableView.register(UINib(nibName: SearchRepositoryTableViewCell.identifier, bundle: nil), forCellReuseIdentifier: SearchRepositoryTableViewCell.identifier)
         
@@ -72,6 +75,14 @@ final class SearchRepositoryViewController: UITableViewController {
         // リポジトリを選択したときに呼ばれる
         presenter.didSelectRow(at: indexPath)
     }
+    
+    // MARK: Private Functions
+    
+    private func setupIndicator() {
+        indicator.center = view.center
+        indicator.color = .black
+        view.addSubview(indicator)
+    }
 }
 
 // MARK: - UISearchBarDelegate
@@ -99,5 +110,13 @@ extension SearchRepositoryViewController: SearchRepositoryPresenterOutput {
     
     func transitionRepositoryDetail(_ repository: RepositoryInfomation) {
         performSegue(withIdentifier: RepositoryDetailViewController.segueIdentifier, sender: repository)
+    }
+    
+    func toggleIndicator(_ isHidden: Bool) {
+        if isHidden {
+            indicator.stopAnimating()
+        } else {
+            indicator.startAnimating()
+        }
     }
 }

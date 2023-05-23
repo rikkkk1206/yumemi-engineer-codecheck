@@ -9,17 +9,27 @@
 import UIKit
 
 protocol SearchRepositoryModelInput {
-    var runningUrlSessionTask: Bool { get set }
+    var runningFetchRepositoryTask: Bool { get set }
     func fetchRepositoryInfomation(inputText: String) async -> [RepositoryInfomation]?
 }
 
 final class SearchRepositoryModel: SearchRepositoryModelInput {
     
-    var runningUrlSessionTask: Bool = false
+    static let didSetRunningFetchRepositoryTask = Notification.Name("didSetRunningFetchRepositoryTask")
+    
+    var runningFetchRepositoryTask: Bool = false {
+        didSet {
+            NotificationCenter.default.post(
+                name: SearchRepositoryModel.didSetRunningFetchRepositoryTask,
+                object: runningFetchRepositoryTask)
+        }
+    }
     
     func fetchRepositoryInfomation(inputText: String) async -> [RepositoryInfomation]? {
         // リポジトリ情報を取得
+        runningFetchRepositoryTask = true
         guard let repositories = await fetchRepository(inputText: inputText) else {
+            runningFetchRepositoryTask = false
             return nil
         }
         var repositoryInfos: [RepositoryInfomation] = []
@@ -31,6 +41,7 @@ final class SearchRepositoryModel: SearchRepositoryModelInput {
             info.image = image
             repositoryInfos.append(info)
         }
+        runningFetchRepositoryTask = false
         return repositoryInfos
     }
     
@@ -46,9 +57,7 @@ final class SearchRepositoryModel: SearchRepositoryModelInput {
             return nil
         }
         
-        runningUrlSessionTask = true
         let result = await URLSessionUtility.urlSessionData(with: url, decodeType: SearchRepositoryResponse.self)
-        runningUrlSessionTask = false
         switch result {
         case .success(let response):
             return response.items
@@ -64,9 +73,7 @@ final class SearchRepositoryModel: SearchRepositoryModelInput {
             return nil
         }
         
-        runningUrlSessionTask = true
         let result = await URLSessionUtility.urlSessionData(with: url)
-        runningUrlSessionTask = false
         switch result {
         case .success(let data):
             guard let image = UIImage(data: data) else {
