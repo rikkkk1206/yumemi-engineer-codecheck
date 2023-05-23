@@ -47,6 +47,7 @@ extension RepositoryDetailViewController: RepositoryDetailPresenterOutput {
     
     func setLabelText() {
         let repository = presenter.repositoryInfo.repository
+        titleLabel.text = repository.fullName
         if let language = repository.language {
             languageLabel.text = "Written in \(language)"
         } else {
