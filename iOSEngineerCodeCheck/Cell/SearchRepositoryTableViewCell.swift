@@ -31,28 +31,8 @@ class SearchRepositoryTableViewCell: UITableViewCell {
         languageLabel.text = info.repository.language
         descriptionLabel.text = info.repository.description
         starsCountLabel.text = String(info.repository.stargazersCount)
-        if let updatedDate = getUpdateDate(info.repository.updatedAt) {
+        if let updatedDate = info.repository.getUpdateDateString() {
             lastUpdateLabel.text = "Updated \(updatedDate)"
         }
-    }
-    
-    private func getUpdateDate(_ updateAt: String) -> String? {
-        // GitHubAPIの更新日文字列は"yyyy-MM-ddThh~"のように'T'で日付と時刻を区切るようにフォーマットされている
-        guard let dateString = updateAt.split(separator: "T").first else {
-            print("failed split \(updateAt)")
-            return nil
-        }
-        let dateFormatter = DateFormatter()
-        dateFormatter.calendar = Calendar(identifier: .gregorian)
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
-        // 一度Dateに変換
-        guard let date = dateFormatter.date(from: String(dateString)) else {
-            print("failed date format \(String(dateString))")
-            return nil
-        }
-        dateFormatter.dateFormat = "yyyy年MM月dd日"
-        return dateFormatter.string(from: date)
     }
 }

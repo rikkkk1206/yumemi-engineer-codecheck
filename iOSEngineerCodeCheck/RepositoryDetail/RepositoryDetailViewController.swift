@@ -25,6 +25,7 @@ class RepositoryDetailViewController: UIViewController {
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var languageLabel: UILabel!
+    @IBOutlet private weak var lastUpdateLabel: UILabel!
     @IBOutlet private weak var starsLabel: UILabel!
     @IBOutlet private weak var watchersLabel: UILabel!
     @IBOutlet private weak var forksLabel: UILabel!
@@ -48,16 +49,14 @@ extension RepositoryDetailViewController: RepositoryDetailPresenterOutput {
     func setLabelText() {
         let repository = presenter.repositoryInfo.repository
         titleLabel.text = repository.fullName
-        if let language = repository.language {
-            languageLabel.text = "Written in \(language)"
-        } else {
-            languageLabel.text = ""
-            print("repository.language is nil")
+        languageLabel.text = repository.language
+        if let updatedDate = repository.getUpdateDateString() {
+            lastUpdateLabel.text = "Updated \(updatedDate)"
         }
-        starsLabel.text = "\(repository.stargazersCount) stars"
-        watchersLabel.text = "\(repository.watchersCount) watchers"
-        forksLabel.text = "\(repository.forksCount) forks"
-        openIssuesLabel.text = "\(repository.openIssuesCount) open issues"
+        starsLabel.text = String(repository.stargazersCount)
+        watchersLabel.text = String(repository.watchersCount)
+        forksLabel.text = String(repository.forksCount)
+        openIssuesLabel.text = String(repository.openIssuesCount)
     }
     
     func setAvatarImage(image: UIImage) {
