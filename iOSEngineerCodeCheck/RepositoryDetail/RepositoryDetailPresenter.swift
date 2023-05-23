@@ -9,7 +9,7 @@
 import UIKit
 
 protocol RepositoryDetailPresenterInput {
-    var repository: Repository { get set }
+    var repositoryInfo: RepositoryInfomation { get set }
     func viewDidLoad()
 }
 
@@ -22,26 +22,21 @@ final class RepositoryDetailPresenter: RepositoryDetailPresenterInput {
     
     private weak var view: RepositoryDetailPresenterOutput!
     private var model: RepositoryDetailModelInput
-    init(repository: Repository, view: RepositoryDetailPresenterOutput, model: RepositoryDetailModelInput) {
-        self.repository = repository
+    init(repositoryInfo: RepositoryInfomation, view: RepositoryDetailPresenterOutput, model: RepositoryDetailModelInput) {
+        self.repositoryInfo = repositoryInfo
         self.view = view
         self.model = model
     }
     
     // MARK: RepositoryDetailPresenterInput
     
-    var repository: Repository
+    var repositoryInfo: RepositoryInfomation
     
     func viewDidLoad() {
         view.setLabelText()
-        // アイコンはurlしか保持していないため、urlから画像を取ってくる
-        model.fetchAvatarImage(
-            with: repository.owner.avatarUrl,
-            completion: { [weak self] avatarImage in
-                DispatchQueue.main.async {
-                    // UI更新なのでメインスレッド
-                    self?.view.setAvatarImage(image: avatarImage)                    
-                }
-            })
+        
+        if let image = repositoryInfo.image {
+            view.setAvatarImage(image: image)
+        }
     }
 }

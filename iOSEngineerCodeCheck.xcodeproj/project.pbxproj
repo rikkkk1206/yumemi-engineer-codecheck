@@ -13,6 +13,8 @@
 		32821CA12A1713BE00688AB2 /* RepositoryDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32821CA02A1713BE00688AB2 /* RepositoryDetailPresenter.swift */; };
 		32821CA32A17172600688AB2 /* RepositoryDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32821CA22A17172600688AB2 /* RepositoryDetailModel.swift */; };
 		32821CAA2A1B358700688AB2 /* URLSessionUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32821CA92A1B358700688AB2 /* URLSessionUtility.swift */; };
+		32821CB12A1B6AF000688AB2 /* SearchRepositoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32821CAF2A1B6AF000688AB2 /* SearchRepositoryTableViewCell.swift */; };
+		32821CB22A1B6AF000688AB2 /* SearchRepositoryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 32821CB02A1B6AF000688AB2 /* SearchRepositoryTableViewCell.xib */; };
 		BF0A658D244F2A3B00280FA6 /* RepositoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0A658C244F2A3B00280FA6 /* RepositoryDetailViewController.swift */; };
 		BFD945DF244DC5E80012785A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD945DE244DC5E80012785A /* AppDelegate.swift */; };
 		BFD945E1244DC5E80012785A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD945E0244DC5E80012785A /* SceneDelegate.swift */; };
@@ -48,6 +50,8 @@
 		32821CA02A1713BE00688AB2 /* RepositoryDetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryDetailPresenter.swift; sourceTree = "<group>"; };
 		32821CA22A17172600688AB2 /* RepositoryDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryDetailModel.swift; sourceTree = "<group>"; };
 		32821CA92A1B358700688AB2 /* URLSessionUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionUtility.swift; sourceTree = "<group>"; };
+		32821CAF2A1B6AF000688AB2 /* SearchRepositoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRepositoryTableViewCell.swift; sourceTree = "<group>"; };
+		32821CB02A1B6AF000688AB2 /* SearchRepositoryTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchRepositoryTableViewCell.xib; sourceTree = "<group>"; };
 		BF0A658C244F2A3B00280FA6 /* RepositoryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryDetailViewController.swift; sourceTree = "<group>"; };
 		BFD945DB244DC5E80012785A /* iOSEngineerCodeCheck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSEngineerCodeCheck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFD945DE244DC5E80012785A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -118,6 +122,15 @@
 			path = RepositoryDetail;
 			sourceTree = "<group>";
 		};
+		32821CB32A1B895900688AB2 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				32821CAF2A1B6AF000688AB2 /* SearchRepositoryTableViewCell.swift */,
+				32821CB02A1B6AF000688AB2 /* SearchRepositoryTableViewCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 		BFD945D2244DC5E80012785A = {
 			isa = PBXGroup;
 			children = (
@@ -141,6 +154,7 @@
 		BFD945DD244DC5E80012785A /* iOSEngineerCodeCheck */ = {
 			isa = PBXGroup;
 			children = (
+				32821CB32A1B895900688AB2 /* Cell */,
 				32821C9F2A1666B500688AB2 /* Data */,
 				32821C9E2A16667500688AB2 /* SearchRepository */,
 				32821CA42A171D1000688AB2 /* RepositoryDetail */,
@@ -278,6 +292,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BFD945EB244DC5EB0012785A /* LaunchScreen.storyboard in Resources */,
+				32821CB22A1B6AF000688AB2 /* SearchRepositoryTableViewCell.xib in Resources */,
 				BFD945E8244DC5EB0012785A /* Assets.xcassets in Resources */,
 				BFD945E6244DC5E80012785A /* Main.storyboard in Resources */,
 			);
@@ -307,6 +322,7 @@
 				32821C9D2A164FD900688AB2 /* Repository.swift in Sources */,
 				BFD945E3244DC5E80012785A /* SearchRepositoryViewController.swift in Sources */,
 				32821C9B2A164E7000688AB2 /* SearchRepositoryModel.swift in Sources */,
+				32821CB12A1B6AF000688AB2 /* SearchRepositoryTableViewCell.swift in Sources */,
 				BF0A658D244F2A3B00280FA6 /* RepositoryDetailViewController.swift in Sources */,
 				BFD945DF244DC5E80012785A /* AppDelegate.swift in Sources */,
 				32821CAA2A1B358700688AB2 /* URLSessionUtility.swift in Sources */,

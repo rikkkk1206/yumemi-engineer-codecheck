@@ -24,12 +24,16 @@ final class SearchRepositoryViewController: UITableViewController {
     
     private var presenter: SearchRepositoryPresenterInput!
     
+    private var indicator = UIActivityIndicatorView(style: .large)
+    
     // MARK: UIViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchBar.text = "GitHubのリポジトリを検索できるよー"
-        searchBar.delegate = self
+        
+        setupIndicator()
+        // カスタムセルをtableViewに登録
+        tableView.register(UINib(nibName: SearchRepositoryTableViewCell.identifier, bundle: nil), forCellReuseIdentifier: SearchRepositoryTableViewCell.identifier)
         
         let model = SearchRepositoryModel()
         let presenter = SearchRepositoryPresenter(view: self, model: model)
@@ -38,7 +42,7 @@ final class SearchRepositoryViewController: UITableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == RepositoryDetailViewController.segueIdentifier,
-           let repository = sender as? Repository {
+           let repositoryInfo = sender as? RepositoryInfomation {
             // 選択したリポジトリの詳細画面へ値渡し
             guard let view = segue.destination as? RepositoryDetailViewController else {
                 print("failed make RepositoryDetailViewController")
@@ -46,7 +50,7 @@ final class SearchRepositoryViewController: UITableViewController {
             }
             let model = RepositoryDetailModel()
             let presenter = RepositoryDetailPresenter(
-                repository: repository,
+                repositoryInfo: repositoryInfo,
                 view: view,
                 model: model)
             view.inject(presenter: presenter)
@@ -60,16 +64,24 @@ final class SearchRepositoryViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Repository", for: indexPath)
-        let repository = presenter.repository(forRow: indexPath.row)
-        cell.textLabel?.text = repository?.fullName
-        cell.detailTextLabel?.text = repository?.language
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchRepositoryTableViewCell.identifier, for: indexPath) as? SearchRepositoryTableViewCell else {
+            fatalError("The dequeued cell is not an instance of SearchRepositoryTableViewCell")
+        }
+        cell.configure(presenter.repositoryInfomation(forRow: indexPath.row))
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // リポジトリを選択したときに呼ばれる
         presenter.didSelectRow(at: indexPath)
+    }
+    
+    // MARK: Private Functions
+    
+    private func setupIndicator() {
+        indicator.center = view.center
+        indicator.color = .black
+        view.addSubview(indicator)
     }
 }
 
@@ -78,15 +90,12 @@ final class SearchRepositoryViewController: UITableViewController {
 extension SearchRepositoryViewController: UISearchBarDelegate {
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        searchBar.text = "" // 初期のテキストを削除
-        return true
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        presenter.didChangeInputText()
+        // 検索バーの文字を編集可能かどうか
+        return presenter.enableEditingSearchBar
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        // 検索開始
         presenter.didClickSearchButton(text: searchBar.text)
     }
 }
@@ -95,11 +104,19 @@ extension SearchRepositoryViewController: UISearchBarDelegate {
 
 extension SearchRepositoryViewController: SearchRepositoryPresenterOutput {
     
-    func updateRepositories(_ repositories: [Repository]) {
+    func updateRepositories() {
         tableView.reloadData()
     }
     
-    func transitionRepositoryDetail(_ repository: Repository) {
+    func transitionRepositoryDetail(_ repository: RepositoryInfomation) {
         performSegue(withIdentifier: RepositoryDetailViewController.segueIdentifier, sender: repository)
+    }
+    
+    func toggleIndicator(_ isHidden: Bool) {
+        if isHidden {
+            indicator.stopAnimating()
+        } else {
+            indicator.startAnimating()
+        }
     }
 }
