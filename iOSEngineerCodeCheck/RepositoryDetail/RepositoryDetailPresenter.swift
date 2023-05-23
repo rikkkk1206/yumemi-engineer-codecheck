@@ -11,11 +11,11 @@ import UIKit
 protocol RepositoryDetailPresenterInput {
     var repositoryInfo: RepositoryInfomation { get set }
     func viewDidLoad()
+    func didTapFavoriteButton()
 }
 
 protocol RepositoryDetailPresenterOutput: AnyObject {
-    func setLabelText()
-    func setAvatarImage(image: UIImage)
+    func updateProperties()
 }
 
 final class RepositoryDetailPresenter: RepositoryDetailPresenterInput {
@@ -33,10 +33,11 @@ final class RepositoryDetailPresenter: RepositoryDetailPresenterInput {
     var repositoryInfo: RepositoryInfomation
     
     func viewDidLoad() {
-        view.setLabelText()
-        
-        if let image = repositoryInfo.image {
-            view.setAvatarImage(image: image)
-        }
+        view.updateProperties()
+    }
+    
+    func didTapFavoriteButton() {
+        repositoryInfo = repositoryInfo.getSwitchedFavorite()
+        view.updateProperties()
     }
 }

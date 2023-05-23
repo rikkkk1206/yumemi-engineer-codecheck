@@ -23,6 +23,10 @@ class SearchRepositoryTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        setupFavoriteButton()
+    }
+    
+    private func setupFavoriteButton() {
         favoriteButton.setImage(UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration.preferringMulticolor()), for: .normal)
         favoriteButton.setImage(UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration.preferringMulticolor()), for: .selected)
     }

@@ -16,14 +16,16 @@ class RepositoryDetailViewController: UIViewController {
     
     // MARK: Public Functions
     
-    func inject(presenter: RepositoryDetailPresenterInput) {
+    func inject(presenter: RepositoryDetailPresenterInput, parentPresenter: SearchRepositoryPresenterInput) {
         self.presenter = presenter
+        self.parentPresenter = parentPresenter
     }
     
     // MARK: @IBOutlet
     
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var favoriteButton: UIButton!
     @IBOutlet private weak var languageLabel: UILabel!
     @IBOutlet private weak var lastUpdateLabel: UILabel!
     @IBOutlet private weak var starsLabel: UILabel!
@@ -36,19 +38,38 @@ class RepositoryDetailViewController: UIViewController {
     
     private var presenter: RepositoryDetailPresenterInput!
     
+    private weak var parentPresenter: SearchRepositoryPresenterInput!
+    
     // MARK: UIViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupFavoriteButton()
         // 遷移後すぐに表示内容をセットする
         presenter.viewDidLoad()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
+    
+    private func setupFavoriteButton() {
+        favoriteButton.setImage(UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration.preferringMulticolor()), for: .normal)
+        favoriteButton.setImage(UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration.preferringMulticolor()), for: .selected)
+    }
+    
+    @IBAction func tappedFavoriteButton(_ sender: Any) {
+        presenter.didTapFavoriteButton()
+        // 検索画面にも反映させる
+        parentPresenter.didTapFavoriteButton(at: parentPresenter.selectedRow)
     }
 }
 
 extension RepositoryDetailViewController: RepositoryDetailPresenterOutput {
     
-    func setLabelText() {
-        let repository = presenter.repositoryInfo.repository
+    func updateProperties() {
+        let info = presenter.repositoryInfo
+        let repository = info.repository
         titleLabel.text = repository.fullName
         languageLabel.text = repository.language
         if let updatedDate = repository.getUpdateDateString() {
@@ -59,9 +80,9 @@ extension RepositoryDetailViewController: RepositoryDetailPresenterOutput {
         forksLabel.text = String(repository.forksCount)
         openIssuesLabel.text = String(repository.openIssuesCount)
         descriptionLabel.text = repository.description
-    }
-    
-    func setAvatarImage(image: UIImage) {
-        imageView.image = image
+        
+        imageView.image = info.image
+        
+        favoriteButton.isSelected = info.isFavorite
     }
 }

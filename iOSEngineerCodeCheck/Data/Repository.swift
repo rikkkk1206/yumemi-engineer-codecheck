@@ -89,4 +89,9 @@ struct RepositoryInfomation {
         self.image = image
         self.isFavorite = isFavorite
     }
+    
+    func getSwitchedFavorite() -> Self {
+        let new = RepositoryInfomation(repository: repository, image: image, isFavorite: !isFavorite)
+        return new
+    }
 }

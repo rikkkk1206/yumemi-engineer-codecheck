@@ -8,8 +8,9 @@
 
 import UIKit
 
-protocol SearchRepositoryPresenterInput {
+protocol SearchRepositoryPresenterInput: AnyObject {
     var numberOfRepositories: Int { get }
+    var selectedRow: Int { get set }
     var enableEditingSearchBar: Bool { get }
     func repositoryInfomation(forRow row: Int) -> RepositoryInfomation?
     func didSelectRow(at indexPath: IndexPath)
@@ -52,13 +53,16 @@ final class SearchRepositoryPresenter: SearchRepositoryPresenterInput {
         return repositoryInfos.count
     }
     
+    var selectedRow: Int = 0
+    
     func repositoryInfomation(forRow row: Int) -> RepositoryInfomation? {
         guard row < numberOfRepositories else { return nil }
         return repositoryInfos[row]
     }
     
     func didSelectRow(at indexPath: IndexPath) {
-        guard let repository = repositoryInfomation(forRow: indexPath.row) else { return }
+        selectedRow = indexPath.row
+        guard let repository = repositoryInfomation(forRow: selectedRow) else { return }
         view.transitionRepositoryDetail(repository)
     }
     
@@ -81,7 +85,7 @@ final class SearchRepositoryPresenter: SearchRepositoryPresenterInput {
     
     func didTapFavoriteButton(at index: Int) {
         guard let repositoryInfo = repositoryInfomation(forRow: index) else { return }
-        repositoryInfos[index] = model.getRepositoryInfomationSwitchedFavorite(of: repositoryInfo)
+        repositoryInfos[index] = repositoryInfo.getSwitchedFavorite()
         view.updateRepositories()
     }
     

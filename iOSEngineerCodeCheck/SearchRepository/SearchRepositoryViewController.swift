@@ -53,7 +53,7 @@ final class SearchRepositoryViewController: UITableViewController {
                 repositoryInfo: repositoryInfo,
                 view: view,
                 model: model)
-            view.inject(presenter: presenter)
+            view.inject(presenter: presenter, parentPresenter: self.presenter)
         }
     }
     

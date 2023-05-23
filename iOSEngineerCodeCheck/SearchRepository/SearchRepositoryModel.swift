@@ -10,7 +10,6 @@ import UIKit
 
 protocol SearchRepositoryModelInput {
     var runningFetchRepositoryTask: Bool { get set }
-    func getRepositoryInfomationSwitchedFavorite(of repositoryInfo: RepositoryInfomation) -> RepositoryInfomation
     func fetchRepositoryInfomation(inputText: String) async -> [RepositoryInfomation]?
 }
 
@@ -24,11 +23,6 @@ final class SearchRepositoryModel: SearchRepositoryModelInput {
                 name: SearchRepositoryModel.didSetRunningFetchRepositoryTask,
                 object: runningFetchRepositoryTask)
         }
-    }
-    
-    func getRepositoryInfomationSwitchedFavorite(of repositoryInfo: RepositoryInfomation) -> RepositoryInfomation {
-        let new = RepositoryInfomation(repository: repositoryInfo.repository, image: repositoryInfo.image, isFavorite: !repositoryInfo.isFavorite)
-        return new
     }
     
     func fetchRepositoryInfomation(inputText: String) async -> [RepositoryInfomation]? {
