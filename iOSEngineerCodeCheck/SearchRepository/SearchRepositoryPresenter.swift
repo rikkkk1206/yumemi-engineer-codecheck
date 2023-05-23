@@ -14,6 +14,7 @@ protocol SearchRepositoryPresenterInput {
     func repositoryInfomation(forRow row: Int) -> RepositoryInfomation?
     func didSelectRow(at indexPath: IndexPath)
     func didClickSearchButton(text: String?)
+    func didTapFavoriteButton(at index: Int)
 }
 
 // PresenterがViewに描画指示をするためのインターフェイス
@@ -76,6 +77,12 @@ final class SearchRepositoryPresenter: SearchRepositoryPresenterInput {
                 self?.view.updateRepositories()
             }
         }
+    }
+    
+    func didTapFavoriteButton(at index: Int) {
+        guard let repositoryInfo = repositoryInfomation(forRow: index) else { return }
+        repositoryInfos[index] = model.getRepositoryInfomationSwitchedFavorite(of: repositoryInfo)
+        view.updateRepositories()
     }
     
     // MARK: Observer

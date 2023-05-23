@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -102,9 +103,21 @@
                             <constraint firstItem="d6c-uR-Bhg" firstAttribute="centerY" secondItem="5DS-0t-apW" secondAttribute="centerY" id="zBO-fH-K6d"/>
                         </constraints>
                     </view>
+                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BHv-jF-bXc">
+                        <rect key="frame" x="280" y="10" width="30" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="25" id="J8I-iw-EzA"/>
+                            <constraint firstAttribute="width" secondItem="BHv-jF-bXc" secondAttribute="height" multiplier="1:1" constant="5" id="qdV-49-h8Z"/>
+                        </constraints>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                        <state key="normal">
+                            <imageReference key="image" image="heart" catalog="system" renderingMode="original"/>
+                        </state>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="a6A-f7-xsx" firstAttribute="leading" secondItem="8WO-Rw-ByA" secondAttribute="leading" id="0fz-Rp-f72"/>
+                    <constraint firstAttribute="trailing" secondItem="BHv-jF-bXc" secondAttribute="trailing" constant="10" id="3CZ-5P-nbx"/>
                     <constraint firstItem="U1a-bd-t1a" firstAttribute="trailing" secondItem="a6A-f7-xsx" secondAttribute="trailing" id="5gm-dY-Tln"/>
                     <constraint firstAttribute="trailing" secondItem="a6A-f7-xsx" secondAttribute="trailing" constant="15" id="7bZ-3F-9Ap"/>
                     <constraint firstItem="Vad-Rg-zoS" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="8dc-fl-abL"/>
@@ -114,6 +127,7 @@
                     <constraint firstAttribute="bottom" secondItem="5DS-0t-apW" secondAttribute="bottom" constant="15" id="REx-Y7-WEf"/>
                     <constraint firstItem="Vad-Rg-zoS" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="a7L-Sa-WHX"/>
                     <constraint firstItem="8WO-Rw-ByA" firstAttribute="leading" secondItem="Vad-Rg-zoS" secondAttribute="trailing" constant="10" id="cMM-5d-vhd"/>
+                    <constraint firstItem="BHv-jF-bXc" firstAttribute="top" secondItem="Vad-Rg-zoS" secondAttribute="top" id="cPC-AT-1LO"/>
                     <constraint firstItem="8WO-Rw-ByA" firstAttribute="top" secondItem="Vad-Rg-zoS" secondAttribute="top" id="cnm-DZ-cai"/>
                     <constraint firstItem="U1a-bd-t1a" firstAttribute="top" secondItem="a6A-f7-xsx" secondAttribute="bottom" constant="15" id="dg9-AK-ZMY"/>
                     <constraint firstItem="5DS-0t-apW" firstAttribute="top" secondItem="U1a-bd-t1a" secondAttribute="bottom" constant="10" id="fMZ-2Y-6Dn"/>
@@ -124,6 +138,7 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
                 <outlet property="descriptionLabel" destination="U1a-bd-t1a" id="rkz-gK-Lit"/>
+                <outlet property="favoriteButton" destination="BHv-jF-bXc" id="nJw-4g-TzF"/>
                 <outlet property="iconImageView" destination="Vad-Rg-zoS" id="zj2-2h-JNU"/>
                 <outlet property="languageLabel" destination="d6c-uR-Bhg" id="eop-PR-VzX"/>
                 <outlet property="lastUpdateLabel" destination="TR9-xQ-Rgt" id="HcD-Bo-VMI"/>
@@ -135,6 +150,7 @@
         </tableViewCell>
     </objects>
     <resources>
+        <image name="heart" catalog="system" width="128" height="107"/>
         <image name="star" catalog="system" width="128" height="116"/>
         <systemColor name="systemGrayColor">
             <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -68,6 +68,7 @@ final class SearchRepositoryViewController: UITableViewController {
             fatalError("The dequeued cell is not an instance of SearchRepositoryTableViewCell")
         }
         cell.configure(presenter.repositoryInfomation(forRow: indexPath.row))
+        cell.addTargetFavoriteButton(self, #selector(tappedFavoriteButton), tag: indexPath.row)
         return cell
     }
     
@@ -82,6 +83,11 @@ final class SearchRepositoryViewController: UITableViewController {
         indicator.center = view.center
         indicator.color = .black
         view.addSubview(indicator)
+    }
+    
+    @objc func tappedFavoriteButton(_ sender: UIButton) {
+        let index = sender.tag
+        presenter.didTapFavoriteButton(at: index)
     }
 }
 

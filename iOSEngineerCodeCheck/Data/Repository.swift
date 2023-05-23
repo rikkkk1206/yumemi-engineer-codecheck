@@ -82,9 +82,11 @@ struct Repository: Decodable {
 struct RepositoryInfomation {
     let repository: Repository
     var image: UIImage?
+    var isFavorite: Bool
     
-    init(repository: Repository, image: UIImage?) {
+    init(repository: Repository, image: UIImage?, isFavorite: Bool = false) {
         self.repository = repository
         self.image = image
+        self.isFavorite = isFavorite
     }
 }

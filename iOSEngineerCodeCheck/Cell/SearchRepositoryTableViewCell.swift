@@ -19,6 +19,13 @@ class SearchRepositoryTableViewCell: UITableViewCell {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var starsCountLabel: UILabel!
     @IBOutlet weak var lastUpdateLabel: UILabel!
+    @IBOutlet weak var favoriteButton: UIButton!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        favoriteButton.setImage(UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration.preferringMulticolor()), for: .normal)
+        favoriteButton.setImage(UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration.preferringMulticolor()), for: .selected)
+    }
     
     func configure(_ info: RepositoryInfomation?) {
         guard let info = info else {
@@ -34,5 +41,12 @@ class SearchRepositoryTableViewCell: UITableViewCell {
         if let updatedDate = info.repository.getUpdateDateString() {
             lastUpdateLabel.text = "Updated \(updatedDate)"
         }
+        
+        favoriteButton.isSelected = info.isFavorite
+    }
+    
+    func addTargetFavoriteButton(_ target: Any?, _ selector: Selector, tag: Int) {
+        favoriteButton.tag = tag
+        favoriteButton.addTarget(target, action: selector, for: .touchUpInside)
     }
 }
