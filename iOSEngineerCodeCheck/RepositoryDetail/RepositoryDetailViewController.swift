@@ -30,6 +30,7 @@ class RepositoryDetailViewController: UIViewController {
     @IBOutlet private weak var watchersLabel: UILabel!
     @IBOutlet private weak var forksLabel: UILabel!
     @IBOutlet private weak var openIssuesLabel: UILabel!
+    @IBOutlet private weak var descriptionLabel: UILabel!
     
     // MARK: Private Variables
     
@@ -57,6 +58,7 @@ extension RepositoryDetailViewController: RepositoryDetailPresenterOutput {
         watchersLabel.text = String(repository.watchersCount)
         forksLabel.text = String(repository.forksCount)
         openIssuesLabel.text = String(repository.openIssuesCount)
+        descriptionLabel.text = repository.description
     }
     
     func setAvatarImage(image: UIImage) {
